@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "portfolio backend"
+version = "0.1.0"
+description = ""
+authors = ["maksim.gorban <maksim.gorban@glowbyteconsulting.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.2"
+uvicorn = "^0.31.1"
+sqlalchemy = "^2.0.36"
+python-dotenv = "^1.0.1"
+asyncpg = "^0.29.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
