@@ -14,12 +14,18 @@ class Skill(Base):
     avatar_url: Mapped[str] = mapped_column(String(256))
 
 
-class SkillModel(BaseModel):
+class SkillCreateModel(BaseModel):
     model_config = {
         "from_attributes": True
     }
-
-    id: int
     name: str
     level: int
     avatar_url: str
+
+
+class SkillModel(SkillCreateModel):
+    model_config = {
+        "from_attributes": True
+    }
+    id: int
+
