@@ -16,6 +16,23 @@ services:
       - default
     restart: unless-stopped
 
+  api:
+    depends_on:
+      - db
+    build:
+      dockerfile: /compose/api/Dockerfile
+    container_name: api
+    environment:
+      - DB_HOST=localhost
+      - DB_PORT=5432
+      - DB_PASSWORD=test
+      - DB_USER=test
+      - DB_NAME=test
+    ports:
+      - "8000:8000"
+    networks:
+      - default
+
 
 networks:
   default:

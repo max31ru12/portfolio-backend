@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from sqlalchemy import select
 
 from app.db_models.skill import Skill, SkillModel, SkillCreateModel
@@ -25,8 +25,10 @@ async def add_skill(form_data: SkillCreateModel) -> None:
 
 
 @router.get("/{skill_id}")
-async def get_skill_detail(skill_id: int) -> SkillModel:
+async def get_skill_detail(skill_id: int) -> SkillModel | None:
     async with async_session() as session:
-        stmt = select(Skill).where(Skill.id == skill_id)
-        skill = await session.execute(stmt)
-    return SkillModel.from_orm(skill.scalars().all()[0])
+        stmt = select(Skill).filter(Skill.id == skill_id)
+        skill = (await session.execute(stmt)).scalars().first()
+    if skill is None:
+        raise HTTPException(status_code=404, detail="There is no such skill")
+    return SkillModel.from_orm(skill)
