@@ -28,6 +28,9 @@ services:
       - DB_PASSWORD=test
       - DB_USER=test
       - DB_NAME=test
+    volumes:
+      - ./app:/portfolio/app
+      - ./alembic:/portfolio/alembic
     ports:
       - "8000:8000"
     networks:

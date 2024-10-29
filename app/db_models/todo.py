@@ -1,10 +1,17 @@
+import enum
 from datetime import datetime
 
-from sqlalchemy import String, Text
+from sqlalchemy import String, Text, Enum
 from sqlalchemy.orm import Mapped, mapped_column
 from pydantic import BaseModel
 
 from app.setup_db import Base
+
+
+class TodoStatus(enum.Enum):
+    assigned = "ASSIGNED"
+    in_progress = "IN_PROGRESS"
+    done = "DONE"
 
 
 class Todo(Base):
@@ -14,6 +21,7 @@ class Todo(Base):
     title: Mapped[str] = mapped_column(String(100))
     description: Mapped[str] = mapped_column(Text())
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+    status: Mapped[enum.Enum] = mapped_column(Enum(TodoStatus))
 
 
 class CreateTodoModel(BaseModel):
