@@ -8,20 +8,19 @@ from pydantic import BaseModel
 from app.setup_db import Base
 
 
-class TodoStatus(enum.Enum):
-    assigned = "ASSIGNED"
-    in_progress = "IN_PROGRESS"
-    done = "DONE"
-
-
 class Todo(Base):
     __tablename__ = "todo"
+
+    class TodoStatus(enum.Enum):
+        assigned = "ASSIGNED"
+        in_progress = "IN_PROGRESS"
+        done = "DONE"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(100))
     description: Mapped[str] = mapped_column(Text())
     created_at: Mapped[datetime] = mapped_column(default=datetime.now)
-    status: Mapped[enum.Enum] = mapped_column(Enum(TodoStatus))
+    status: Mapped[enum.Enum] = mapped_column(Enum(TodoStatus), default=TodoStatus.assigned)
 
 
 class CreateTodoModel(BaseModel):

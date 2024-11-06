@@ -9,7 +9,7 @@ services:
       - POSTGRES_USER=test
       - POSTGRES_PASSWORD=test
     volumes:
-      - db:/data/postgres
+      - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -42,5 +42,5 @@ networks:
     driver: bridge
 
 volumes:
-  db:
+  db_data:
 
