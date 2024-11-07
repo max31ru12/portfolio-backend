@@ -22,9 +22,35 @@ class User(Base):
     def hash_password(password: str) -> str:
         return pbkdf2_sha256.hash(password)
 
+    def verify_password(self, password: str) -> bool:
+        return pbkdf2_sha256.verify(password, self.password)
 
-class RegisterUser(BaseModel):
+
+class SignIn(BaseModel):
     username: str = Field(min_length=6, max_length=100)
-    email: str
     password: str
+
+
+class SignUp(SignIn):
+    email: str
     password_confirmation: str
+
+
+class UserData(BaseModel):
+    id: int
+    username: str
+    email: str
+    registered_at: datetime
+
+    model_config = {
+        "from_attributes": True
+    }
+
+
+class TokenInfo(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    pass
