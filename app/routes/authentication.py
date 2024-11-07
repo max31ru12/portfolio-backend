@@ -1,11 +1,16 @@
-from fastapi import APIRouter, HTTPException, Form, Depends
+from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy import select
 
-from app.db_models.users import SignUp, User, SignIn, TokenInfo
+from app.db_models.users import SignUp, User, SignIn, TokenInfo, UserData
 from app.setup_db import async_session
-from app.utils.auth import authenticate_user, encode_jwt
+from app.utils.auth import get_user_by_username, encode_jwt, get_authenticated_user
 
 router = APIRouter(tags=["Authentication"])
+
+
+@router.get("/users/current_user")
+async def get_current_user(current_user: User = Depends(get_authenticated_user)) -> UserData:
+    return UserData.from_orm(current_user)
 
 
 @router.post("/signup/")
@@ -29,9 +34,9 @@ async def sign_up(signup_data: SignUp) -> None:
 async def sign_in(auth_data: SignIn) -> TokenInfo:
 
     async with async_session() as session:
-        user = await authenticate_user(auth_data, session)
+        user = await get_user_by_username(auth_data.username, session)
         if user is None or not user.verify_password(auth_data.password):
-            raise HTTPException(status_code=404, detail="Wrong username or password")
+            raise HTTPException(status_code=401, detail="Wrong password or username")
 
         jwt_payload = {"username": user.username, "email": user.email}
         access_token = encode_jwt(jwt_payload)

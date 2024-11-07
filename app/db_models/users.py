@@ -53,4 +53,7 @@ class TokenInfo(BaseModel):
 
 
 class TokenData(BaseModel):
-    pass
+    username: str
+    email: str
+    exp: datetime
+    iat: datetime
