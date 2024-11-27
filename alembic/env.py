@@ -9,8 +9,6 @@ from alembic import context
 
 from app.config import DB_URL
 from app.setup_db import db_meta
-from app.db_models.skill import Skill
-from app.db_models.todo import Todo
 from app.db_models.users import User
 
 

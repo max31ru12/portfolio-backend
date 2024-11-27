@@ -2,11 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import DB_URL, DEV_MODE
-from app.routes import home, todo, skills, authentication
+from app.routes import home, authentication
 from app.setup_db import async_engine, Base
 
-from app.db_models.skill import Skill  # noqa
-from app.db_models.todo import Todo  # noqa
 from app.db_models.users import User  # noqa
 
 app = FastAPI(title="Portfolio API")
@@ -32,6 +30,4 @@ app.add_middleware(
 )
 
 app.include_router(home.router, prefix="/home")
-app.include_router(skills.router, prefix="/skills")
-app.include_router(todo.router, prefix="/todo")
 app.include_router(authentication.router, prefix="/authentication")

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Response
 from sqlalchemy import select
 
 from app.db_models.users import SignUp, User, SignIn, TokenInfo, UserData
@@ -13,7 +13,7 @@ async def get_current_user(current_user: User = Depends(get_authenticated_user))
     return UserData.from_orm(current_user)
 
 
-@router.post("/signup/")
+@router.post("/signup/", status_code=201)
 async def sign_up(signup_data: SignUp) -> None:
 
     async with async_session() as session:
@@ -31,7 +31,7 @@ async def sign_up(signup_data: SignUp) -> None:
 
 
 @router.post("/signin/", summary="Sign in to an account", response_model=TokenInfo)
-async def sign_in(auth_data: SignIn) -> TokenInfo:
+async def sign_in(auth_data: SignIn, response: Response) -> TokenInfo:
 
     async with async_session() as session:
         user = await get_user_by_username(auth_data.username, session)
@@ -40,5 +40,6 @@ async def sign_in(auth_data: SignIn) -> TokenInfo:
 
         jwt_payload = {"username": user.username, "email": user.email}
         access_token = encode_jwt(jwt_payload)
+        response.headers["Authorization"] = f"Bearer {access_token}"
 
     return TokenInfo(access_token=access_token, token_type="Bearer")
